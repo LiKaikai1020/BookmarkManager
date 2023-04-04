@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Folder Viewer</title>
+	<style>
+		body {
+			display: flex;
+			flex-direction: row;
+			height: 100vh;
+			margin: 0;
+		}
+
+		.sidebar {
+			flex-basis: 20%;
+			background-color: #f1f1f1;
+			padding: 20px;
+			box-sizing: border-box;
+			overflow-y: auto;
+		}
+
+		.main-content {
+			flex-grow: 1;
+			padding: 20px;
+			box-sizing: border-box;
+			overflow-y: auto;
+		}
+
+		ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		li {
+			padding: 10px;
+			cursor: pointer;
+			border-bottom: 1px solid #ccc;
+		}
+
+		li:hover {
+			background-color: #ddd;
+		}
+
+		.active {
+			background-color: #4CAF50;
+			color: white;
+		}
+	</style>
+</head>
+<body>
+	<div class="sidebar">
+		<ul id="folder-list">
+			<li class="active" onclick="displayFolderContents('folder1')">Folder 1</li>
+			<li onclick="displayFolderContents('folder2')">Folder 2</li>
+			<li onclick="displayFolderContents('folder3')">Folder 3</li>
+		</ul>
+	</div>
+	<div class="main-content" id="main-content">
+		<h1>Folder Contents</h1>
+		<p>Select a folder on the left to view its contents.</p>
+	</div>
+	<script>
+		function displayFolderContents(folderName) {
+			// Get the element that contains the main content
+			var mainContent = document.getElementById('main-content');
+
+			// Create an XMLHttpRequest object
+			var xhr = new XMLHttpRequest();
+
+			// Define what happens when the response is received
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState == 4 && xhr.status == 200) {
+					// Update the main content with the response text
+					mainContent.innerHTML = xhr.responseText;
+				}
+			};
+
+			// Send the request to the server
+			xhr.open('GET', folderName + '.html', true);
+			xhr.send();
+
+			// Remove the "active" class from all list items
+			var folderList = document.getElementById('folder-list');
+			var listItems = folderList.getElementsByTagName('li');
+			for (var i = 0; i < listItems.length; i++) {
+				listItems[i].classList.remove('active');
+			}
+
+			// Add the "active" class to the clicked list item
+			event.currentTarget.classList.add('active');
+		}
+	</script>
+</body>
+</html>
